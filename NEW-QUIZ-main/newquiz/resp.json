@@ -1,0 +1,420 @@
+{
+  "questions": [
+    {
+      "id": "seed_1",
+      "text": "What does HTML stand for?",
+      "opts": {
+        "A": "HyperText Markup Language",
+        "B": "HighText Machine Language",
+        "C": "HyperText and links Markup Language",
+        "D": "None of the above"
+      },
+      "correct": "A",
+      "cat": "Web Dev",
+      "diff": "Easy"
+    },
+    {
+      "id": "seed_2",
+      "text": "Which HTML tag creates a hyperlink?",
+      "opts": {
+        "A": "<link>",
+        "B": "<a>",
+        "C": "<href>",
+        "D": "<url>"
+      },
+      "correct": "B",
+      "cat": "Web Dev",
+      "diff": "Easy"
+    },
+    {
+      "id": "seed_3",
+      "text": "What does typeof null return in JavaScript?",
+      "opts": {
+        "A": "null",
+        "B": "undefined",
+        "C": "object",
+        "D": "string"
+      },
+      "correct": "C",
+      "cat": "JavaScript",
+      "diff": "Medium"
+    },
+    {
+      "id": "seed_4",
+      "text": "Which sorting algorithm has O(n log n) average time?",
+      "opts": {
+        "A": "Bubble Sort",
+        "B": "Selection Sort",
+        "C": "Merge Sort",
+        "D": "Insertion Sort"
+      },
+      "correct": "C",
+      "cat": "Algorithms",
+      "diff": "Medium"
+    },
+    {
+      "id": "seed_5",
+      "text": "What does CSS stand for?",
+      "opts": {
+        "A": "Colorful Style Sheets",
+        "B": "Computer Style Sheets",
+        "C": "Cascading Style Sheets",
+        "D": "Creative Style System"
+      },
+      "correct": "C",
+      "cat": "Web Dev",
+      "diff": "Easy"
+    },
+    {
+      "id": "seed_6",
+      "text": "Which data structure uses the LIFO principle?",
+      "opts": {
+        "A": "Queue",
+        "B": "Stack",
+        "C": "Tree",
+        "D": "Graph"
+      },
+      "correct": "B",
+      "cat": "Data Structures",
+      "diff": "Easy"
+    },
+    {
+      "id": "seed_8",
+      "text": "Which keyword declares a constant in JavaScript?",
+      "opts": {
+        "A": "var",
+        "B": "let",
+        "C": "constant",
+        "D": "const"
+      },
+      "correct": "D",
+      "cat": "JavaScript",
+      "diff": "Easy"
+    },
+    {
+      "id": "seed_9",
+      "text": "What is the default display value of a div?",
+      "opts": {
+        "A": "inline",
+        "B": "block",
+        "C": "flex",
+        "D": "inline-block"
+      },
+      "correct": "B",
+      "cat": "Web Dev",
+      "diff": "Easy"
+    },
+    {
+      "id": "seed_10",
+      "text": "Which HTTP method is used to send data to a server?",
+      "opts": {
+        "A": "GET",
+        "B": "DELETE",
+        "C": "POST",
+        "D": "HEAD"
+      },
+      "correct": "C",
+      "cat": "Web Dev",
+      "diff": "Medium"
+    },
+    {
+      "id": 1777740866381.7183,
+      "text": "Which of the following statements about HashMap and TreeMap is true?",
+      "opts": {
+        "A": "HashMap maintains insertion order of its elements.",
+        "B": "TreeMap allows multiple null keys.",
+        "C": "TreeMap is generally faster than HashMap for basic operations like get and put.",
+        "D": "HashMap does not guarantee any specific order of its elements."
+      },
+      "correct": "D",
+      "cat": "AI Generated",
+      "diff": "Medium"
+    },
+    {
+      "id": 1777740866381.0544,
+      "text": "In Java, where are local variables and reference variables of a method stored during execution?",
+      "opts": {
+        "A": "Heap memory",
+        "B": "Stack memory",
+        "C": "Method area",
+        "D": "Constant pool"
+      },
+      "correct": "B",
+      "cat": "AI Generated",
+      "diff": "Medium"
+    },
+    {
+      "id": 1777740866381.9316,
+      "text": "Which functional interface in the java.util.function package takes one argument and returns a boolean value?",
+      "opts": {
+        "A": "Consumer",
+        "B": "Supplier",
+        "C": "Predicate",
+        "D": "Function"
+      },
+      "correct": "C",
+      "cat": "AI Generated",
+      "diff": "Medium"
+    },
+    {
+      "id": 1777740866381.3403,
+      "text": "What happens if a catch block for Exception is placed before a catch block for ArithmeticException in a try-catch statement?",
+      "opts": {
+        "A": "The code compiles but ArithmeticException will never be caught by its specific block.",
+        "B": "A compile-time error occurs because the ArithmeticException block is unreachable.",
+        "C": "Both catch blocks will execute if an ArithmeticException is thrown.",
+        "D": "The program runs normally and selects the most specific catch block regardless of order."
+      },
+      "correct": "B",
+      "cat": "AI Generated",
+      "diff": "Medium"
+    },
+    {
+      "id": 1777740866381.1357,
+      "text": "What is the primary effect of the 'volatile' keyword when applied to a variable in Java?",
+      "opts": {
+        "A": "It makes the variable immutable.",
+        "B": "It prevents the variable from being serialized.",
+        "C": "It ensures that changes to the variable are always visible to other threads by reading/writing directly to main memory.",
+        "D": "It automatically synchronizes all methods that access the variable."
+      },
+      "correct": "C",
+      "cat": "AI Generated",
+      "diff": "Medium"
+    }
+  ],
+  "publishedQuizzes": [
+    {
+      "id": 1777741112660,
+      "title": "java",
+      "questions": [
+        {
+          "id": 1777740866381.9316,
+          "text": "Which functional interface in the java.util.function package takes one argument and returns a boolean value?",
+          "opts": {
+            "A": "Consumer",
+            "B": "Supplier",
+            "C": "Predicate",
+            "D": "Function"
+          },
+          "correct": "C",
+          "cat": "AI Generated",
+          "diff": "Medium"
+        },
+        {
+          "id": "seed_4",
+          "text": "Which sorting algorithm has O(n log n) average time?",
+          "opts": {
+            "A": "Bubble Sort",
+            "B": "Selection Sort",
+            "C": "Merge Sort",
+            "D": "Insertion Sort"
+          },
+          "correct": "C",
+          "cat": "Algorithms",
+          "diff": "Medium"
+        },
+        {
+          "id": "seed_10",
+          "text": "Which HTTP method is used to send data to a server?",
+          "opts": {
+            "A": "GET",
+            "B": "DELETE",
+            "C": "POST",
+            "D": "HEAD"
+          },
+          "correct": "C",
+          "cat": "Web Dev",
+          "diff": "Medium"
+        },
+        {
+          "id": 1777740866381.7183,
+          "text": "Which of the following statements about HashMap and TreeMap is true?",
+          "opts": {
+            "A": "HashMap maintains insertion order of its elements.",
+            "B": "TreeMap allows multiple null keys.",
+            "C": "TreeMap is generally faster than HashMap for basic operations like get and put.",
+            "D": "HashMap does not guarantee any specific order of its elements."
+          },
+          "correct": "D",
+          "cat": "AI Generated",
+          "diff": "Medium"
+        },
+        {
+          "id": 1777740866381.3403,
+          "text": "What happens if a catch block for Exception is placed before a catch block for ArithmeticException in a try-catch statement?",
+          "opts": {
+            "A": "The code compiles but ArithmeticException will never be caught by its specific block.",
+            "B": "A compile-time error occurs because the ArithmeticException block is unreachable.",
+            "C": "Both catch blocks will execute if an ArithmeticException is thrown.",
+            "D": "The program runs normally and selects the most specific catch block regardless of order."
+          },
+          "correct": "B",
+          "cat": "AI Generated",
+          "diff": "Medium"
+        },
+        {
+          "id": 1777740866381.0544,
+          "text": "In Java, where are local variables and reference variables of a method stored during execution?",
+          "opts": {
+            "A": "Heap memory",
+            "B": "Stack memory",
+            "C": "Method area",
+            "D": "Constant pool"
+          },
+          "correct": "B",
+          "cat": "AI Generated",
+          "diff": "Medium"
+        },
+        {
+          "id": 1777740866381.1357,
+          "text": "What is the primary effect of the 'volatile' keyword when applied to a variable in Java?",
+          "opts": {
+            "A": "It makes the variable immutable.",
+            "B": "It prevents the variable from being serialized.",
+            "C": "It ensures that changes to the variable are always visible to other threads by reading/writing directly to main memory.",
+            "D": "It automatically synchronizes all methods that access the variable."
+          },
+          "correct": "C",
+          "cat": "AI Generated",
+          "diff": "Medium"
+        }
+      ],
+      "timeLimit": 10,
+      "publishedAt": "2026-05-02T16:58:32.660Z",
+      "attempts": [
+        {
+          "studentName": "Anas Khan",
+          "score": 57,
+          "correct": 4,
+          "total": 7,
+          "time": "10:30 PM",
+          "quizTitle": "java"
+        }
+      ]
+    },
+    {
+      "id": 1777742655583,
+      "title": "Auto-Generated Quiz",
+      "questions": [
+        {
+          "id": "seed_1",
+          "text": "What does HTML stand for?",
+          "opts": {
+            "A": "HyperText Markup Language",
+            "B": "HighText Machine Language",
+            "C": "HyperText and links Markup Language",
+            "D": "None of the above"
+          },
+          "correct": "A",
+          "cat": "Web Dev",
+          "diff": "Easy"
+        },
+        {
+          "id": "seed_2",
+          "text": "Which HTML tag creates a hyperlink?",
+          "opts": {
+            "A": "<link>",
+            "B": "<a>",
+            "C": "<href>",
+            "D": "<url>"
+          },
+          "correct": "B",
+          "cat": "Web Dev",
+          "diff": "Easy"
+        },
+        {
+          "id": "seed_5",
+          "text": "What does CSS stand for?",
+          "opts": {
+            "A": "Colorful Style Sheets",
+            "B": "Computer Style Sheets",
+            "C": "Cascading Style Sheets",
+            "D": "Creative Style System"
+          },
+          "correct": "C",
+          "cat": "Web Dev",
+          "diff": "Easy"
+        },
+        {
+          "id": "seed_9",
+          "text": "What is the default display value of a div?",
+          "opts": {
+            "A": "inline",
+            "B": "block",
+            "C": "flex",
+            "D": "inline-block"
+          },
+          "correct": "B",
+          "cat": "Web Dev",
+          "diff": "Easy"
+        },
+        {
+          "id": "seed_10",
+          "text": "Which HTTP method is used to send data to a server?",
+          "opts": {
+            "A": "GET",
+            "B": "DELETE",
+            "C": "POST",
+            "D": "HEAD"
+          },
+          "correct": "C",
+          "cat": "Web Dev",
+          "diff": "Medium"
+        }
+      ],
+      "timeLimit": 5,
+      "publishedAt": "2026-05-02T17:24:15.583Z",
+      "attempts": [
+        {
+          "studentName": "Anas Khan",
+          "score": 60,
+          "correct": 3,
+          "total": 5,
+          "time": "10:58 pm",
+          "quizTitle": "Auto-Generated Quiz"
+        }
+      ]
+    }
+  ],
+  "allAttempts": [
+    {
+      "studentName": "Anas Khan",
+      "score": 100,
+      "correct": 1,
+      "total": 1,
+      "time": "10:26 PM",
+      "quizTitle": "java"
+    },
+    {
+      "studentName": "Anas Khan",
+      "score": 57,
+      "correct": 4,
+      "total": 7,
+      "time": "10:30 PM",
+      "quizTitle": "java"
+    },
+    {
+      "studentName": "Anas Khan",
+      "score": 29,
+      "correct": 2,
+      "total": 7,
+      "time": "10:30 PM",
+      "quizTitle": "java"
+    },
+    {
+      "studentName": "Anas Khan",
+      "score": 60,
+      "correct": 3,
+      "total": 5,
+      "time": "10:58 pm",
+      "quizTitle": "Auto-Generated Quiz"
+    }
+  ],
+  "streaks": {
+    "2201": {
+      "count": 1,
+      "last": "2026-05-02"
+    }
+  }
+}
