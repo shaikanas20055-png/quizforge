@@ -1166,7 +1166,7 @@ function renderAIPanel(){
   const isServer=window.location.protocol!=='file:';
   const apiNotice=isServer
     ?`<div class="api-notice connected">✅ <strong>Gemini API Connected</strong> — Running via server, real AI generation active</div>`
-    :`<div class="api-notice">⚠️ <strong>Run via server for real Gemini AI.</strong> Currently using offline fallback. See server.js instructions below.</div>`;
+    :`<div class="api-notice">⚠️ <strong>Run via server for real Gemini AI.</strong> Currently using offline fallback.</div>`;
 
   wrap.innerHTML=`
     ${apiNotice}
@@ -1259,15 +1259,6 @@ function renderAIPanel(){
             <button class="sample-prompt-btn" onclick="useSample(1)">🌍 French Revolution — causes, Estates, Bastille, Robespierre...</button>
             <button class="sample-prompt-btn" onclick="useSample(2)">💻 JavaScript Promises — states, .then(), async/await...</button>
             <button class="sample-prompt-btn" onclick="useSample(3)">🔢 Pythagorean Theorem — a²+b²=c², triples, applications...</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div><div class="card-title">🚀 VS Code Setup</div></div></div>
-          <div style="font-size:.76rem;color:var(--muted);line-height:1.9">
-            <div>1. Put <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">index.html</code> + <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">server.js</code> in same folder</div>
-            <div>2. Create <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">.env</code> with your API key</div>
-            <div>3. Run <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">node server.js</code> in terminal</div>
-            <div>4. Open <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">http://localhost:3000</code></div>
           </div>
         </div>
         <div class="card" id="ai-bank-summary" style="display:none">

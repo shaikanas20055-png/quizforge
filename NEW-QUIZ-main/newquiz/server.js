@@ -7,9 +7,24 @@
 //    4. Open: http://localhost:3000
 // ─────────────────────────────────────────────
 
-const http = require('http');
-const fs   = require('fs');
-const path = require('path');
+const http  = require('http');
+const https = require('https');
+const fs    = require('fs');
+const path  = require('path');
+
+/** Wikipedia API (GET JSON) — must send a descriptive User-Agent per Wikimedia policy */
+function wikiHttpsGet(apiUrl){
+  return new Promise((resolve, reject) => {
+    https.get(apiUrl, {
+      headers: { 'User-Agent': 'QuizForge/1.0 (Educational quiz app; local/server use)' },
+    }, (response) => {
+      let chunks = '';
+      response.setEncoding('utf8');
+      response.on('data', d => { chunks += d; });
+      response.on('end', () => { resolve(chunks); });
+    }).on('error', reject);
+  });
+}
 
 // ── Load .env (no external packages needed) ──
 try {
@@ -58,6 +73,55 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(html);
     });
+    return;
+  }
+
+  // ── GET /api/wikipedia?q=... → article extract (English Wikipedia)
+  if (req.method === 'GET' && req.url.startsWith('/api/wikipedia')) {
+    let q = '';
+    try {
+      q = (new URL(req.url, 'http://localhost').searchParams.get('q') || '').trim();
+    } catch {
+      q = '';
+    }
+    const sendJSON = (code, obj) => {
+      res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(obj));
+    };
+    if (!q) {
+      sendJSON(400, { error: { message: 'Missing or empty query (q).' } });
+      return;
+    }
+    (async () => {
+      try {
+        const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${encodeURIComponent(q)}&srlimit=5&srnamespace=0`;
+        const searchRaw = await wikiHttpsGet(searchUrl);
+        const searchJson = JSON.parse(searchRaw);
+        const hits = searchJson.query && searchJson.query.search ? searchJson.query.search : [];
+        const hit = hits[0];
+        if (!hit || !hit.title) {
+          sendJSON(404, { error: { message: 'No Wikipedia article found for that search.' } });
+          return;
+        }
+        const title = hit.title;
+        const extractUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent(title)}&prop=extracts&explaintext=1&redirects=1&exchars=24000`;
+        const exRaw = await wikiHttpsGet(extractUrl);
+        const exJson = JSON.parse(exRaw);
+        const pages = exJson.query && exJson.query.pages ? exJson.query.pages : {};
+        const page = pages[Object.keys(pages)[0]];
+        if (!page || page.missing || !page.extract || page.extract.trim().length < 50) {
+          sendJSON(404, { error: { message: 'Could not read article text — try another title or spelling.' } });
+          return;
+        }
+        sendJSON(200, {
+          title: page.title || title,
+          extract: page.extract.trim(),
+          sourceUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, '_'))}`,
+        });
+      } catch (e) {
+        sendJSON(502, { error: { message: 'Wikipedia request failed: ' + e.message } });
+      }
+    })();
     return;
   }
 
@@ -110,7 +174,6 @@ const server = http.createServer((req, res) => {
         }
       });
 
-      const https = require('https');
       const options = {
         hostname: 'generativelanguage.googleapis.com',
         port:     443,

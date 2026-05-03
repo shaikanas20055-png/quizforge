@@ -34,10 +34,6 @@ h1,h2,h3,h4{letter-spacing:-.01em}
 .role-btn.active{background:var(--surface);color:var(--text);border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .role-btn.active.faculty{border-color:rgba(124,92,252,.4);color:var(--a3)}
 .role-btn.active.student{border-color:rgba(79,142,247,.4);color:var(--accent)}
-.auth-tabs{display:flex;gap:4px;background:var(--sf2);border:1px solid var(--border);border-radius:8px;padding:4px;margin-bottom:1.75rem}
-.auth-tab{flex:1;border:none;background:transparent;color:var(--muted);padding:.45rem;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;transition:all .2s}
-.auth-tab:hover{color:var(--text)}
-.auth-tab.active{background:var(--surface);color:var(--text);border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .form-group{margin-bottom:1rem}
 label{display:block;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
 .input-wrap{position:relative}
@@ -184,6 +180,11 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer;padding:0}
 .qbc-badge{display:flex;align-items:center;gap:.3rem}
 .start-quiz-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:.55rem 1.25rem;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
 .start-quiz-btn:hover{background:#3a7ef5;transform:scale(1.03)}
+.quiz-browse-card.attempted{opacity:.9;cursor:default;border-color:rgba(148,163,184,.35)}
+.quiz-browse-card.attempted:hover{border-color:rgba(148,163,184,.45);box-shadow:0 1px 4px rgba(0,0,0,.04);transform:none}
+.quiz-browse-subhead{font-size:1.05rem;font-weight:750;margin:1.35rem 0 .65rem;color:var(--text)}
+.quiz-browse-subhead:first-of-type{margin-top:0}
+.badge-attempted{background:rgba(34,197,94,.14);color:var(--ok);font-size:.72rem;font-weight:700;padding:.22rem .55rem;border-radius:6px;white-space:nowrap}
 
 /* TAKE QUIZ (student) */
 .quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);gap:1rem;flex-wrap:wrap}
@@ -313,10 +314,6 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer;padding:0}
       <button class="role-btn active faculty" id="role-faculty" onclick="switchRole('faculty')">🎓 Faculty</button>
       <button class="role-btn student"        id="role-student" onclick="switchRole('student')">🎒 Student</button>
     </div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="auth-tab-login"    onclick="switchAuthMode('login')">Login</button>
-      <button class="auth-tab"        id="auth-tab-register" onclick="switchAuthMode('register')">Register</button>
-    </div>
     <div id="auth-error" class="auth-error"></div>
     <div id="form-login">
       <div class="form-group">
@@ -329,7 +326,7 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer;padding:0}
       </div>
       <button class="btn btn-primary btn-full" onclick="doLogin()">Login →</button>
       <div class="auth-divider">or</div>
-      <button class="btn btn-secondary btn-full" onclick="switchAuthMode('register')">Create an account</button>
+      <button class="btn btn-secondary btn-full" onclick="switchAuthMode('register')">Create account</button>
     </div>
     <div id="form-register" style="display:none">
       <div class="form-group">
@@ -489,10 +486,6 @@ input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer;padding:0}
   <div id="student-quiz-wrapper">
     <!-- BROWSE QUIZZES -->
     <div id="browse-section">
-      <div style="margin-bottom:1.5rem">
-        <h2 style="font-size:1.5rem;font-weight:800">Available Quizzes</h2>
-        <p style="color:var(--muted);font-size:.8rem;margin-top:.25rem">Pick a quiz and start right away — no code needed!</p>
-      </div>
       <div id="quiz-browse-list"></div>
     </div>
     <!-- ACTIVE QUIZ -->
@@ -590,8 +583,6 @@ function switchRole(role){
 }
 function switchAuthMode(mode){
   authMode=mode;
-  document.getElementById('auth-tab-login').className='auth-tab'+(mode==='login'?' active':'');
-  document.getElementById('auth-tab-register').className='auth-tab'+(mode==='register'?' active':'');
   document.getElementById('form-login').style.display=mode==='login'?'block':'none';
   document.getElementById('form-register').style.display=mode==='register'?'block':'none';
   clearAuthError();
@@ -655,6 +646,12 @@ function doLogout(){
   document.getElementById('app-screen').classList.remove('show');
   document.getElementById('login-id').value='';
   document.getElementById('login-pass').value='';
+  document.getElementById('reg-name').value='';
+  document.getElementById('reg-id').value='';
+  document.getElementById('reg-extra').value='';
+  document.getElementById('reg-pass').value='';
+  document.getElementById('reg-pass2').value='';
+  switchAuthMode('login');
   clearAuthError();
   currentQuiz=null;answers={};lastScore=null;currentQ=0;
   clearInterval(timerInterval);
@@ -1062,26 +1059,74 @@ function renderFacultyResults(){
 }
 
 // ── STUDENT BROWSE + START QUIZ (no code needed) ──
+function studentAttemptMatchesUser(a){
+  if(!currentUser||currentUser.role!=='student')return false;
+  if(a.studentId!=null&&a.studentId!=='')return String(a.studentId)===String(currentUser.id);
+  return a.studentName===currentUser.name;
+}
+function studentHasAttemptedQuiz(quiz){
+  return currentUser&&currentUser.role==='student'&&(quiz.attempts||[]).some(studentAttemptMatchesUser);
+}
+function getStudentAttemptForQuiz(quiz){
+  if(!currentUser||currentUser.role!=='student')return null;
+  const mine=(quiz.attempts||[]).filter(studentAttemptMatchesUser);
+  if(!mine.length)return null;
+  return mine.reduce((b,a)=>a.score>=b.score?a:b);
+}
 function renderBrowseQuizzes(){
   const browseSection=document.getElementById('browse-section');
   const quizArea=document.getElementById('quiz-area');
   if(currentQuiz){browseSection.style.display='none';quizArea.style.display='block';return;}
   browseSection.style.display='block';quizArea.style.display='none';
   const list=document.getElementById('quiz-browse-list');
+  const isStudent=currentUser&&currentUser.role==='student';
+  list.innerHTML='';
+  const hero=document.createElement('div');
+  hero.style.marginBottom='1.5rem';
+  hero.innerHTML=`<h2 style="font-size:1.5rem;font-weight:800">Take a Quiz</h2><p style="color:var(--muted);font-size:.8rem;margin-top:.25rem">Each quiz can be taken once — completed quizzes are marked below.</p>`;
+  list.appendChild(hero);
   if(!publishedQuizzes.length){
-    list.innerHTML=`<div class="no-quiz"><div class="big">📭</div><h3>No Quizzes Available</h3><p>Your teacher hasn't published any quizzes yet. Check back soon!</p></div>`;
+    const empty=document.createElement('div');
+    empty.className='no-quiz';
+    empty.innerHTML=`<div class="big">📭</div><h3>No Quizzes Available</h3><p>Your teacher hasn't published any quizzes yet. Check back soon!</p>`;
+    list.appendChild(empty);
     return;
   }
-  list.innerHTML='';
-  const grid=document.createElement('div');
-  grid.className='quiz-browse-grid';
   const icons=['📘','📗','📙','📕','📓','📔','📒'];
-  publishedQuizzes.forEach((q,i)=>{
-    const div=document.createElement('div');
-    div.className='quiz-browse-card';
-    div.innerHTML=`
+  const available=[],attempted=[];
+  if(isStudent){
+    publishedQuizzes.forEach(q=>{(studentHasAttemptedQuiz(q)?attempted:available).push(q)});
+  }else available.push(...publishedQuizzes);
+  function addSection(title,qlist,attemptedCards){
+    if(!qlist.length)return;
+    const h=document.createElement('h3');
+    h.className='quiz-browse-subhead';
+    h.textContent=title;
+    list.appendChild(h);
+    const grid=document.createElement('div');
+    grid.className='quiz-browse-grid';
+    qlist.forEach((q,idx)=>{
+      const div=document.createElement('div');
+      div.className='quiz-browse-card'+(attemptedCards?' attempted':'');
+      const att=attemptedCards?getStudentAttemptForQuiz(q):null;
+      if(attemptedCards){
+        div.innerHTML=`
       <div class="qbc-left">
-        <div class="qbc-icon">${icons[i%icons.length]}</div>
+        <div class="qbc-icon">${icons[(publishedQuizzes.indexOf(q))%icons.length]}</div>
+        <div>
+          <div class="qbc-title">${q.title}</div>
+          <div class="qbc-meta">
+            <span class="badge-attempted">Attempted</span>
+            <span class="qbc-badge">📝 ${q.questions.length} Questions</span>
+            <span class="qbc-badge">⏱ ${q.timeLimit} min</span>
+            ${att?`<span class="qbc-badge">📊 Your score: ${att.score}%</span><span class="qbc-badge">🕐 ${att.time}</span>`:''}
+          </div>
+        </div>
+      </div>`;
+      }else{
+        div.innerHTML=`
+      <div class="qbc-left">
+        <div class="qbc-icon">${icons[idx%icons.length]}</div>
         <div>
           <div class="qbc-title">${q.title}</div>
           <div class="qbc-meta">
@@ -1092,14 +1137,26 @@ function renderBrowseQuizzes(){
         </div>
       </div>
       <button class="start-quiz-btn" onclick="startQuiz('${q.id}')">▶ Start Quiz</button>`;
-    grid.appendChild(div);
-  });
-  list.appendChild(grid);
+      }
+      grid.appendChild(div);
+    });
+    list.appendChild(grid);
+  }
+  if(isStudent&&!available.length&&attempted.length){
+    const note=document.createElement('div');
+    note.className='no-quiz';
+    note.style.padding='1.25rem';
+    note.innerHTML=`<div class="big">✓</div><h3>All quizzes attempted</h3><p>You have completed every published quiz. See <strong>My Results</strong> for details.</p>`;
+    list.appendChild(note);
+  }
+  addSection('Available quizzes',available,false);
+  if(isStudent&&attempted.length)addSection('Attempted quizzes',attempted,true);
 }
 
 function startQuiz(quizId){
   const quiz=publishedQuizzes.find(q=>q.id==quizId);
   if(!quiz){toast('Quiz not found!','error');return;}
+  if(currentUser&&currentUser.role==='student'&&studentHasAttemptedQuiz(quiz)){toast('You already completed this quiz.','warn');return;}
   const dedupedQuestions=shuffle(getUniqueQuestions(quiz.questions||[]));
   currentQuiz={...quiz,questions:dedupedQuestions};
   answers={};currentQ=0;
@@ -1156,7 +1213,7 @@ function submitQuiz(){
   const correct=qs.filter((q,i)=>answers[i]===q.correct).length;
   lastScore=Math.round(correct/qs.length*100);
   const origQuiz=publishedQuizzes.find(q=>q.id===currentQuiz.id);
-  const attempt={studentName:currentUser.name,score:lastScore,correct,total:qs.length,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),quizTitle:currentQuiz.title};
+  const attempt={quizId:String(currentQuiz.id),studentId:currentUser.id,studentName:currentUser.name,score:lastScore,correct,total:qs.length,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),quizTitle:currentQuiz.title};
   allAttempts.push(attempt);
   if(origQuiz)origQuiz.attempts.push(attempt);
   saveData();
@@ -1232,7 +1289,7 @@ function renderAIPanel(){
   const isServer=window.location.protocol!=='file:';
   const apiNotice=isServer
     ?`<div class="api-notice connected">✅ <strong>Gemini API Connected</strong> — Running via server, real AI generation active</div>`
-    :`<div class="api-notice">⚠️ <strong>Run via server for real Gemini AI.</strong> Currently using offline fallback. See server.js instructions below.</div>`;
+    :`<div class="api-notice">⚠️ <strong>Run via server for real Gemini AI.</strong> Currently using offline fallback.</div>`;
 
   wrap.innerHTML=`
     ${apiNotice}
@@ -1325,15 +1382,6 @@ function renderAIPanel(){
             <button class="sample-prompt-btn" onclick="useSample(1)">🌍 French Revolution — causes, Estates, Bastille, Robespierre...</button>
             <button class="sample-prompt-btn" onclick="useSample(2)">💻 JavaScript Promises — states, .then(), async/await...</button>
             <button class="sample-prompt-btn" onclick="useSample(3)">🔢 Pythagorean Theorem — a²+b²=c², triples, applications...</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div><div class="card-title">🚀 VS Code Setup</div></div></div>
-          <div style="font-size:.76rem;color:var(--muted);line-height:1.9">
-            <div>1. Put <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">index.html</code> + <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">server.js</code> in same folder</div>
-            <div>2. Create <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">.env</code> with your API key</div>
-            <div>3. Run <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">node server.js</code> in terminal</div>
-            <div>4. Open <code style="background:var(--sf2);padding:.1rem .35rem;border-radius:4px;font-size:.72rem">http://localhost:3000</code></div>
           </div>
         </div>
         <div class="card" id="ai-bank-summary" style="display:none">
